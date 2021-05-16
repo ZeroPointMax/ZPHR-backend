@@ -12,6 +12,11 @@ import alsaaudio
 
 app = Flask(__name__)
 
+alsa_headphone_mixer = alsaaudio.Mixer('Headphone', 0, 0)  # two zeroes needed because PulseAudio
+alsa_ab1_mixer = alsaaudio.Mixer('Analogue', 0, 0)
+alsa_ab2_mixer = alsaaudio.Mixer('Analogue Playback Boost', 0, 0)
+alsa_digital_mixer = alsaaudio.Mixer('Digital', 0, 0)  # this one is to mute
+
 
 @app.route('/volDigital', methods=['POST', 'GET'])
 def volume_digital():
