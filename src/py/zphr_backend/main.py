@@ -76,7 +76,8 @@ def mute():
         if int(request.form['mute']) != 1:
             digi_mute = 0
         alsa_digital_mixer.setmute(digi_mute)
-    return str(alsa_digital_mixer.getmute()[0])
+    else:
+        return str(alsa_digital_mixer.getmute()[0])
 
 
 @app.route('/analogBooster1', methods=['POST', 'GET'])
