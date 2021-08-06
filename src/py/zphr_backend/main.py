@@ -45,16 +45,14 @@ def mute():
 @app.route('/analogBooster1', methods=['POST', 'GET'])
 def analog_b1():
     alsa_ab1_mixer = alsaaudio.Mixer('Analogue', 0, 0)
-    if request.method == 'GET':
-        return 'return_booster1'
-    else:
-        return 'check_and_return_booster1'
+    if request.method == 'POST':
+        vol: int = int(request.form['vol'])
+    return str(alsa_ab1_mixer.getvolume()[0])
 
 
 @app.route('/analogBooster2', methods=['POST', 'GET'])
 def analog_b2():
     alsa_ab2_mixer = alsaaudio.Mixer('Analogue Playback Boost', 0, 0)
-    if request.method == 'GET':
-        return 'return_booster2'
-    else:
-        return 'check_and_return_booster2'
+    if request.method == 'POST':
+        vol: int = int(request.form['vol'])
+    return str(alsa_ab2_mixer.getvolume()[0])
