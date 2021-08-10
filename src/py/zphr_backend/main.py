@@ -49,7 +49,7 @@ def analog_b1():
         if (int(request.form['vol']) > 0):
             alsa_ab1_mixer.setvolume(100)
         else:
-            alsa_ab2_mixer.setvolume(0)
+            alsa_ab1_mixer.setvolume(0)
     return str(alsa_ab1_mixer.getvolume()[0])
 
 
