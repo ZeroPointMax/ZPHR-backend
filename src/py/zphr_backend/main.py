@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import request
+from subprocess import run as subprun
 import alsaaudio
 
 app = Flask(__name__)
@@ -46,7 +47,7 @@ def mute():
 def analog_b1():
     alsa_ab1_mixer = alsaaudio.Mixer('Analogue', 0, 0)
     if request.method == 'POST':
-        if (int(request.form['vol']) > 0):
+        if int(request.form['vol']) > 0:
             alsa_ab1_mixer.setvolume(100)
         else:
             alsa_ab1_mixer.setvolume(0)
@@ -57,8 +58,18 @@ def analog_b1():
 def analog_b2():
     alsa_ab2_mixer = alsaaudio.Mixer('Analogue Playback Boost', 0, 0)
     if request.method == 'POST':
-        if (int(request.form['vol']) > 0):
+        if int(request.form['vol']) > 0:
             alsa_ab2_mixer.setvolume(100)
         else:
             alsa_ab2_mixer.setvolume(0)
     return str(alsa_ab2_mixer.getvolume()[0])
+
+
+@app.route('/reboot', methods=['GET'])
+def system_reboot():
+    return subprun(["shutdown", "-r" "-t", "5"])
+
+
+@app.route('/shutdown', methods=['GET'])
+def system_shutdown():
+    return subprun(["shutdown", "-r", "5"])
