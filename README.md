@@ -6,6 +6,8 @@ Bring new life into your old HiFi by retrofitting it into the digital world! Str
 
 This is where ZPHR is intended to help out.
 
+The Backend is based on a REST API, but I figured an [Android App](https://github.com/ZeroPointMax/ZPHR-Android) would be nice.
+
 ## Features
 
 ### Working
@@ -23,3 +25,8 @@ This is where ZPHR is intended to help out.
 - Sending local files to the Backend for playback
 - Ads
 - Commercial Features
+
+## Supported DACs
+
+- Hifiberry DAC2+
+- Hifiberry DAC+
