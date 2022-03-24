@@ -26,15 +26,16 @@ def bluetooth_query_state():
 
 
     Queries the current state of the Bluetooth unit.
+    Currently, these states are valid
+    -255 - could not determine Bluetooth state
+    -3 - bluetoothctl Error
+    2 - Hardware-blocked Bluetooth Module
+    -1 - rfkill Error
+    0 - Bluetooth is disabled
+    1 - Bluetooth is enabled
+    2 - Bluetooth is in Pairing Mode
     Returns:
-        One of the following states:
-        -255: could not determine Bluetooth state
-        -3: bluetoothctl Error
-        -2: Hardware-blocked Bluetooth Module
-        -1: rfkill Error
-        0: Bluetooth is disabled
-        1: Bluetooth is enabled
-        2: Bluetooth is in Pairing Mode
+        The new Bluetooth state
     """
     rfkill_output = subprocess.run(['rfkill'], stdout=subprocess.PIPE)  # run the "rfkill" command on a shell and save its output
     # now follows some tasty spaghetti code. Mmh yummy
