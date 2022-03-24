@@ -18,6 +18,7 @@ re_bluetooth_unlocked = re.compile("(.*bluetooth.*hci.*)((unblocked unblocked)|(
 re_bluetooth_locked = re.compile("(.*bluetooth.*hci.*)((blocked unblocked)|(gesperrt entsperrt))")
 re_bluetooth_hwlock = re.compile("(.*bluetooth.*hci.*)(((un)?blocked)|((ge|ent)sperrt)) (blocked|gesperrt)")
 re_bluetooth_pairable = re.compile(".*Pairable: yes")
+re_disk_writable = re.compile("\/dev\/mmcblk.* on \/ type .* \(.*rw.*")  # TODO: test this on a raspi
 
 
 def bluetooth_query_state():
@@ -240,3 +241,18 @@ def disk_protection():
     Returns:
         The write-protection state as reported by the host
     """
+    protection = int(request.form['protection'])
+    if re_disk_writable.match(subprocess.run(['mount'], stdout=subprocess.PIPE).stdout.decode('utf-8')):  # disk is writable
+        if protection == 1:  # ...and we want it to be ro
+            subprocess.run(['mount', '-o', 'ro', '/'])
+        else:  # ... and we want it to stay RW
+            return 0
+    # disk is read-only
+    if protection == 0:  # ... and we want it to be RW
+        subprocess.run(['mount', '-o', 'rw', '/'])
+    else:  # and we want it to stay RO
+        return 1
+    # get new status
+    if re_disk_writable.match(subprocess.run(['mount'], stdout=subprocess.PIPE).stdout.decode('utf-8')):
+        return 0
+    return 1
