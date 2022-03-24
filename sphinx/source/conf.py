@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.abspath('../../src/py/zphr_backend'))
 # -- Project information -----------------------------------------------------
 
 project = 'ZPHR-backend'
-copyright = '2021, Maximilian Kerst'
+copyright = '2022, Maximilian Kerst'
 author = 'Maximilian Kerst'
 
 
