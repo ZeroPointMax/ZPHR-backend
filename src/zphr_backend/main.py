@@ -4,8 +4,8 @@ The Backend for ZeroPointHifiRemote, or ZPHR for short.
 This module exposes a REST API offering control over audio settings and some handy system maintenance like reboots.
 It is intended to assist a headless Linux DAC project, like Raspberry Pi + Hifiberry DAC
 """
-
 from flask import Flask
+
 from flask import request
 import alsaaudio
 import subprocess
@@ -37,7 +37,8 @@ def bluetooth_query_state():
     Returns:
         The new Bluetooth state
     """
-    rfkill_output = subprocess.run(['rfkill'], stdout=subprocess.PIPE)  # run the "rfkill" command on a shell and save its output
+    rfkill_output = subprocess.run(['rfkill'],
+                                   stdout=subprocess.PIPE)  # run the "rfkill" command on a shell and save its output
     # now follows some tasty spaghetti code. Mmh yummy
     if rfkill_output.returncode != 0:
         return -1  # rfkill could not run successfully - something is seriously wrong
@@ -243,7 +244,8 @@ def disk_protection():
         The write-protection state as reported by the host
     """
     protection = int(request.form['protection'])
-    if re_disk_writable.match(subprocess.run(['mount'], stdout=subprocess.PIPE).stdout.decode('utf-8')):  # disk is writable
+    if re_disk_writable.match(
+            subprocess.run(['mount'], stdout=subprocess.PIPE).stdout.decode('utf-8')):  # disk is writable
         if protection == 1:  # ...and we want it to be ro
             subprocess.run(['mount', '-o', 'ro', '/'])
         else:  # ... and we want it to stay RW
@@ -257,3 +259,7 @@ def disk_protection():
     if re_disk_writable.match(subprocess.run(['mount'], stdout=subprocess.PIPE).stdout.decode('utf-8')):
         return 0
     return 1
+
+
+if __name__ == "__main__":
+    app.run()

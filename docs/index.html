@@ -57,6 +57,54 @@ Input is validated to be either 0 or 100.
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="main.bluetooth_query_state">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">bluetooth_query_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#main.bluetooth_query_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queries the current state of the Bluetooth unit.
+Currently, these states are valid
+-255 - could not determine Bluetooth state
+-3 - bluetoothctl Error
+2 - Hardware-blocked Bluetooth Module
+-1 - rfkill Error
+0 - Bluetooth is disabled
+1 - Bluetooth is enabled
+2 - Bluetooth is in Pairing Mode
+:returns: The new Bluetooth state</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.bluetooth_set_state">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">bluetooth_set_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#main.bluetooth_set_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the desired Bluetooth state as specified in new_state.
+Valid stats are:
+0: Bluetooth is disabled
+1: Bluetooth is enabled
+2: Bluetooth is in Pairing Mode
+:returns: The new Bluetooth state using bluetooth_query_state()</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.bluetooth_status">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">bluetooth_status</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#main.bluetooth_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an API endpoint to query and manipulate the Bluetooth Status.
+A simple GET request will return the current state.
+A POST request with the “state” form will set the Bluetooth state.
+Valid states are:
+0: Bluetooth is disabled
+1: Bluetooth is enabled
+2: Bluetooth is enabled and in Pairing mode
+:returns: The Bluetooth state as reported by the host</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.disk_protection">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">disk_protection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#main.disk_protection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an API endpoint to query and manipulate the disk protection status.
+A simple GET request will return the current state.
+A POST request with the “protection” form will enable (1) or disable (0) the write-protection of the mmcblk
+:returns: The write-protection state as reported by the host</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="main.mute">
 <span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">mute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#main.mute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates an API endpoint to get and set the mute state of the “Digital” thingy of a DAC in ALSA.
@@ -157,10 +205,10 @@ Input is validated to be between 0 and 100.
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2021, Maximilian Kerst.
+      &copy;2022, Maximilian Kerst.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

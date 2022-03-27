@@ -12,7 +12,7 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../src/py/zphr_backend'))
+sys.path.insert(0, os.path.abspath('../../src/zphr_backend'))
 
 
 # -- Project information -----------------------------------------------------
