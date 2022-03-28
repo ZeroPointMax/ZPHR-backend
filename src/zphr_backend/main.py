@@ -20,6 +20,10 @@ re_bluetooth_hwlock = re.compile("(.*bluetooth.*hci.*)(((un)?blocked)|((ge|ent)s
 re_bluetooth_pairable = re.compile(".*Pairable: yes")
 re_disk_writable = re.compile("\/dev\/mmcblk.* on \/ type .* \(.*rw.*")  # TODO: test this on a raspi
 
+# set here the IDs of the DAC
+alsa_cardindex = 1
+alsa_device = 'default'
+
 
 def bluetooth_query_state():
     """
@@ -87,12 +91,12 @@ def volume_digital():
     """
 
     Creates API an endpoint to get and set the "Digital" volume of a DAC in ALSA.
-    The Getter uses HTTP GET and the Setter uses HTTP POST.
+    Supports HTTP GET and HTTP POST.
     Input is validated to be between 0 and 100.
     Returns:
         A string with the actual new volume as reported by ALSA.
     """
-    alsa_digital_mixer = alsaaudio.Mixer('Digital', 0, 0)
+    alsa_digital_mixer = alsaaudio.Mixer('Digital', 0, alsa_cardindex, alsa_device)
     if request.method == 'POST':
         vol: int = int(request.form['vol'])
         if vol > 100:
@@ -108,12 +112,12 @@ def volume_headphone():
     """
 
     Creates an API endpoint to get and set the "Headphone" volume of a DAC in ALSA.
-    The Getter uses HTTP GET and the Setter uses HTTP POST.
+    Supports HTTP GET and HTTP POST.
     Input is validated to be between 0 and 100.
     Returns:
         A string with the actual new volume as reported by ALSA.
     """
-    alsa_headphone_mixer = alsaaudio.Mixer('Headphone', 0, 0)  # two zeroes needed because PulseAudio
+    alsa_headphone_mixer = alsaaudio.Mixer('Headphone', alsa_cardindex, alsa_device)
     if request.method == 'POST':
         vol: int = int(request.form['vol'])
         if vol > 100:
@@ -129,12 +133,12 @@ def mute():
     """
 
     Creates an API endpoint to get and set the mute state of the "Digital" thingy of a DAC in ALSA.
-    The Getter uses HTTP GET and the Setter uses HTTP POST.
+    Supports HTTP GET and HTTP POST.
     Input is validated to be either 0 or 1.
     Returns:
         A string with the actual new mute state as reported by ALSA
     """
-    alsa_digital_mixer = alsaaudio.Mixer('Digital', 0, 0)
+    alsa_digital_mixer = alsaaudio.Mixer('Digital', alsa_cardindex, alsa_device)
     if request.method == 'POST':
         digi_mute = 1
         if int(request.form['mute']) != 1:
@@ -149,12 +153,12 @@ def analog_b1():
     """
 
     Creates an API endpoint to get and set the "Analogue Booster" 1 volume of a DAC in ALSA.
-    The Getter uses HTTP GET and the Setter uses HTTP POST.
+    Supports HTTP GET and HTTP POST.
     Input is validated to be either 0 or 100.
     Returns:
         A string with the actual new volume as reported by ALSA.
 """
-    alsa_ab1_mixer = alsaaudio.Mixer('Analogue', 0, 0)
+    alsa_ab1_mixer = alsaaudio.Mixer('Analogue', alsa_cardindex, alsa_device)
     if request.method == 'POST':
         if int(request.form['vol']) > 0:
             alsa_ab1_mixer.setvolume(100)
@@ -168,12 +172,12 @@ def analog_b2():
     """
 
     Creates an API endpoint to get and set the "Analogue Booster" 2 volume of a DAC in ALSA.
-    The Getter uses HTTP GET and the Setter uses HTTP POST.
+    Supports HTTP GET and HTTP POST.
     Input is validated to be either 0 or 100.
     Returns:
         A string with the actual new volume as reported by ALSA.
 """
-    alsa_ab2_mixer = alsaaudio.Mixer('Analogue Playback Boost', 0, 0)
+    alsa_ab2_mixer = alsaaudio.Mixer('Analogue Playback Boost', alsa_cardindex, alsa_device)
     if request.method == 'POST':
         if int(request.form['vol']) > 0:
             alsa_ab2_mixer.setvolume(100)
