@@ -22,7 +22,7 @@ re_disk_writable = re.compile("\/dev\/mmcblk.* on \/ type .* \(.*rw.*")  # TODO:
 
 # set here the IDs of the DAC
 alsa_cardindex = 0
-alsa_device = 'default'
+alsa_device = 'sysdefault'
 
 
 def bluetooth_query_state():
