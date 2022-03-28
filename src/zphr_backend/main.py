@@ -21,7 +21,7 @@ re_bluetooth_pairable = re.compile(".*Pairable: yes")
 re_disk_writable = re.compile("\/dev\/mmcblk.* on \/ type .* \(.*rw.*")  # TODO: test this on a raspi
 
 # set here the IDs of the DAC
-alsa_cardindex = 1
+alsa_cardindex = 0
 alsa_device = 'default'
 
 
