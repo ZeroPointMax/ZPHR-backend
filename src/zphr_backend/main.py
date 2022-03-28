@@ -196,7 +196,7 @@ def system_reboot():
     Returns:
         The exit code of the shutdown command
     """
-    return str(subprocess.run(["sudo shutdown", "-r" "t 5"]).returncode)
+    return str(subprocess.run(['sudo', 'shutdown', '-r' 't 5']).returncode)
 
 
 @app.route('/shutdown', methods=['GET'])
@@ -208,7 +208,7 @@ def system_shutdown():
     Returns:
         The exit code of the shutdown command
 """
-    return str(subprocess.run(["sudo shutdown", "-h", "t 5"]).returncode)
+    return str(subprocess.run(['sudo', 'shutdown', 't 5']).returncode)
 
 
 @app.route('/bluetooth', methods=['POST', 'GET'])
