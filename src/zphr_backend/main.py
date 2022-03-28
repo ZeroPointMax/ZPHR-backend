@@ -46,11 +46,12 @@ def bluetooth_query_state():
     # now follows some tasty spaghetti code. Mmh yummy
     if rfkill_output.returncode != 0:
         return -1  # rfkill could not run successfully - something is seriously wrong
-    if re_bluetooth_hwlock.match(rfkill_output.stdout.decode('utf-8')):
+    rfkill_output_str = rfkill_output.stdout.decode('utf-8')
+    if re_bluetooth_hwlock.match(rfkill_output_str):
         return -2  # Bluetooth is HW-locked: can't reliably do anything about that
-    if re_bluetooth_locked:
+    if re_bluetooth_locked.match(rfkill_output_str):
         return 0
-    if re_bluetooth_unlocked:
+    if re_bluetooth_unlocked.match(rfkill_output_str):
         btctl_output = subprocess.run(['bluetoothctl show'], stdout=subprocess.PIPE)
         if rfkill_output.returncode != 0:
             return -3  # bluetoothctl could not run successfully - something is seriously wrong
