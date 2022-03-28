@@ -253,12 +253,12 @@ def disk_protection():
         if re_disk_writable.search(
                 subprocess.run(['mount'], stdout=subprocess.PIPE).stdout.decode('utf-8')):  # disk is writable
             if protection == 1:  # ...and we want it to be ro
-                subprocess.run("sudo raspi-config nonint do_overlayfs 0")
+                subprocess.run(['sudo', 'raspi-config', 'nonint', 'do_overlayfs', '1'])
             else:  # ... and we want it to stay RW
                 return '0'
         # disk is read-only
         if protection == 0:  # ... and we want it to be RW
-            subprocess.run("sudo raspi-config nonint do_overlayfs 1")
+            subprocess.run(['sudo', 'raspi-config', 'nonint', 'do_overlayfs', '1'])
         else:  # and we want it to stay RO
             return '1'
         # get new status
