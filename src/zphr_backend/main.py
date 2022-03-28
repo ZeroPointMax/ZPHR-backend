@@ -248,19 +248,20 @@ def disk_protection():
     Returns:
         The write-protection state as reported by the host
     """
-    protection = int(request.form['protection'])
-    if re_disk_writable.search(
-            subprocess.run(['mount'], stdout=subprocess.PIPE).stdout.decode('utf-8')):  # disk is writable
-        if protection == 1:  # ...and we want it to be ro
-            subprocess.run("sudo raspi-config nonint do_overlayfs 0")
-        else:  # ... and we want it to stay RW
-            return '0'
-    # disk is read-only
-    if protection == 0:  # ... and we want it to be RW
-        subprocess.run("sudo raspi-config nonint do_overlayfs 1")
-    else:  # and we want it to stay RO
-        return '1'
-    # get new status
+    if request.method == "POST":
+        protection = int(request.form['protection'])
+        if re_disk_writable.search(
+                subprocess.run(['mount'], stdout=subprocess.PIPE).stdout.decode('utf-8')):  # disk is writable
+            if protection == 1:  # ...and we want it to be ro
+                subprocess.run("sudo raspi-config nonint do_overlayfs 0")
+            else:  # ... and we want it to stay RW
+                return '0'
+        # disk is read-only
+        if protection == 0:  # ... and we want it to be RW
+            subprocess.run("sudo raspi-config nonint do_overlayfs 1")
+        else:  # and we want it to stay RO
+            return '1'
+        # get new status
     if re_disk_writable.search(subprocess.run(['mount'], stdout=subprocess.PIPE).stdout.decode('utf-8')):
         return '0'
     return '1'
