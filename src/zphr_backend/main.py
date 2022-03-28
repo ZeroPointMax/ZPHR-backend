@@ -233,7 +233,7 @@ def bluetooth_status():
         if state < 0:
             state = 0
         bluetooth_set_state(state)
-    return bluetooth_query_state()
+    return str(bluetooth_query_state())
 
 
 @app.route('/disk', methods=['POST', 'GET'])
@@ -253,16 +253,16 @@ def disk_protection():
         if protection == 1:  # ...and we want it to be ro
             subprocess.run(['mount', '-o', 'ro', '/'])
         else:  # ... and we want it to stay RW
-            return 0
+            return '0'
     # disk is read-only
     if protection == 0:  # ... and we want it to be RW
         subprocess.run(['mount', '-o', 'rw', '/'])
     else:  # and we want it to stay RO
-        return 1
+        return '1'
     # get new status
     if re_disk_writable.match(subprocess.run(['mount'], stdout=subprocess.PIPE).stdout.decode('utf-8')):
-        return 0
-    return 1
+        return '0'
+    return '1'
 
 
 if __name__ == "__main__":
