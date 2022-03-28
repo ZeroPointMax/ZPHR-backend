@@ -96,7 +96,7 @@ def volume_digital():
     Returns:
         A string with the actual new volume as reported by ALSA.
     """
-    alsa_digital_mixer = alsaaudio.Mixer('Digital', 0, alsa_cardindex, alsa_device)
+    alsa_digital_mixer = alsaaudio.Mixer('Digital', 0, alsa_cardindex, device=alsa_device)
     if request.method == 'POST':
         vol: int = int(request.form['vol'])
         if vol > 100:
@@ -117,7 +117,7 @@ def volume_headphone():
     Returns:
         A string with the actual new volume as reported by ALSA.
     """
-    alsa_headphone_mixer = alsaaudio.Mixer('Headphone', alsa_cardindex, alsa_device)
+    alsa_headphone_mixer = alsaaudio.Mixer('Headphone', alsa_cardindex, device=alsa_device)
     if request.method == 'POST':
         vol: int = int(request.form['vol'])
         if vol > 100:
@@ -138,7 +138,7 @@ def mute():
     Returns:
         A string with the actual new mute state as reported by ALSA
     """
-    alsa_digital_mixer = alsaaudio.Mixer('Digital', alsa_cardindex, alsa_device)
+    alsa_digital_mixer = alsaaudio.Mixer('Digital', alsa_cardindex, device=alsa_device)
     if request.method == 'POST':
         digi_mute = 1
         if int(request.form['mute']) != 1:
@@ -158,7 +158,7 @@ def analog_b1():
     Returns:
         A string with the actual new volume as reported by ALSA.
 """
-    alsa_ab1_mixer = alsaaudio.Mixer('Analogue', alsa_cardindex, alsa_device)
+    alsa_ab1_mixer = alsaaudio.Mixer('Analogue', alsa_cardindex, device=alsa_device)
     if request.method == 'POST':
         if int(request.form['vol']) > 0:
             alsa_ab1_mixer.setvolume(100)
@@ -177,7 +177,7 @@ def analog_b2():
     Returns:
         A string with the actual new volume as reported by ALSA.
 """
-    alsa_ab2_mixer = alsaaudio.Mixer('Analogue Playback Boost', alsa_cardindex, alsa_device)
+    alsa_ab2_mixer = alsaaudio.Mixer('Analogue Playback Boost', alsa_cardindex, device=alsa_device)
     if request.method == 'POST':
         if int(request.form['vol']) > 0:
             alsa_ab2_mixer.setvolume(100)
