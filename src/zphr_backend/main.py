@@ -14,11 +14,11 @@ import re
 app = Flask(__name__)
 
 # RegEx to determine state of Bluetooth from rfkill output
-re_bluetooth_unlocked = re.compile("(.*bluetooth.*hci.*)((unblocked unblocked)|(entsperrt entsperrt))")
-re_bluetooth_locked = re.compile("(.*bluetooth.*hci.*)((blocked unblocked)|(gesperrt entsperrt))")
-re_bluetooth_hwlock = re.compile("(.*bluetooth.*hci.*)(((un)?blocked)|((ge|ent)sperrt)) (blocked|gesperrt)")
+re_bluetooth_unlocked = re.compile("(.*hci.*)((unblocked unblocked)|(entsperrt entsperrt))")
+re_bluetooth_locked = re.compile("(.*hci.*)((blocked unblocked)|(gesperrt entsperrt))")
+re_bluetooth_hwlock = re.compile("(.*hci.*)(((un)?blocked)|((ge|ent)sperrt)) (blocked|gesperrt)")
 re_bluetooth_pairable = re.compile(".*Pairable: yes")
-re_disk_writable = re.compile("\/dev\/mmcblk.* on \/ type .* \(.*rw.*")  # TODO: test this on a raspi
+re_disk_writable = re.compile("\\/dev\\/mmcblk.* on \\/ type .* \\(.*rw.*")
 
 # set here the IDs of the DAC
 alsa_cardindex = 0
@@ -47,15 +47,15 @@ def bluetooth_query_state():
     if rfkill_output.returncode != 0:
         return -1  # rfkill could not run successfully - something is seriously wrong
     rfkill_output_str = rfkill_output.stdout.decode('utf-8')
-    if re_bluetooth_hwlock.match(rfkill_output_str):
+    if re_bluetooth_hwlock.search(rfkill_output_str):
         return -2  # Bluetooth is HW-locked: can't reliably do anything about that
-    if re_bluetooth_locked.match(rfkill_output_str):
+    if re_bluetooth_locked.search(rfkill_output_str):
         return 0
-    if re_bluetooth_unlocked.match(rfkill_output_str):
+    if re_bluetooth_unlocked.search(rfkill_output_str):
         btctl_output = subprocess.run(['bluetoothctl show'], stdout=subprocess.PIPE)
         if rfkill_output.returncode != 0:
             return -3  # bluetoothctl could not run successfully - something is seriously wrong
-        if re_bluetooth_pairable.match(btctl_output.stdout.decode('utf-8')):
+        if re_bluetooth_pairable.search(btctl_output.stdout.decode('utf-8')):
             return 2  # we're pairable
         return 1  # not pairable, but unblocked
 
@@ -249,19 +249,19 @@ def disk_protection():
         The write-protection state as reported by the host
     """
     protection = int(request.form['protection'])
-    if re_disk_writable.match(
+    if re_disk_writable.search(
             subprocess.run(['mount'], stdout=subprocess.PIPE).stdout.decode('utf-8')):  # disk is writable
         if protection == 1:  # ...and we want it to be ro
-            subprocess.run(['mount', '-o', 'ro', '/'])
+            subprocess.run("sudo raspi-config nonint do_overlayfs 0")
         else:  # ... and we want it to stay RW
             return '0'
     # disk is read-only
     if protection == 0:  # ... and we want it to be RW
-        subprocess.run(['mount', '-o', 'rw', '/'])
+        subprocess.run("sudo raspi-config nonint do_overlayfs 1")
     else:  # and we want it to stay RO
         return '1'
     # get new status
-    if re_disk_writable.match(subprocess.run(['mount'], stdout=subprocess.PIPE).stdout.decode('utf-8')):
+    if re_disk_writable.search(subprocess.run(['mount'], stdout=subprocess.PIPE).stdout.decode('utf-8')):
         return '0'
     return '1'
 
